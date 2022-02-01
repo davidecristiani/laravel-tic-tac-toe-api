@@ -38,7 +38,7 @@
 
             <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
                 <div class="flex justify-center pt-8 sm:justify-start sm:pt-0">
-                    <h1>Laravel Tic-Toc-Toe API
+                    <h1>Laravel Tic-Toc-Toe API</h1>
                 </div>
 
                 <div class="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
@@ -51,10 +51,10 @@
 
                             <div class="ml-12">
                                 <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                    /newgame
+                                    /api/newgame
                                     <div>method: post</div>
                                     <div>params: void (no param)</div>
-                                    <div>return: game_id</div>
+                                    <div>return: game_id (json)</div>
                                 </div>
                             </div>
                         </div>
@@ -67,16 +67,16 @@
 
                             <div class="ml-12">
                                 <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                    /play
+                                    /api/play
                                     <div>method: post</div>
                                     <div>params:
                                     <ul>
-                                        <li>game_id</li>
-                                        <li>player</li>
-                                        <li>position</li>
+                                        <li>game_id (returned by /newgame)</li>
+                                        <li>player: (1, 2)</li>
+                                        <li>position: (a1, a2, a3, b1, b2, b3, c1, c2, c3)</li>
                                     </ul>
                                     </div>
-                                    <div>return: gameturn </div>
+                                    <div>return: gameturn status details (json) </div>
                                 </div>
                             </div>
                         </div>
