@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('/newgame', [\App\Http\Controllers\GameturnController::class,'newgame']);
+Route::post('/play', [\App\Http\Controllers\GameturnController::class,'play']);
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
