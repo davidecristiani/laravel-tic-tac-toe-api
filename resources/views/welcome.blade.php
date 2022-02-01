@@ -72,7 +72,7 @@
                                     <div>params:
                                     <ul>
                                         <li>game_id</li>
-                                        <li>player_id</li>
+                                        <li>player</li>
                                         <li>position</li>
                                     </ul>
                                     </div>

@@ -33,8 +33,8 @@ class GameturnController extends Controller {
         try {
             $request->validate( [
                 'game_id'  => 'required|exists:gameturns',
-                'player'   => 'required|in:' . implode( ',', Gameturn::$players ),
-                'position' => 'required|in:' . implode( ',', Gameturn::$positions ),
+                'player'   => 'required|integer|in:' . implode( ',', Gameturn::$players ),
+                'position' => 'required|in:' . implode( ',', Gameturn::$tris_positions ),
             ] );
             $last_gameturn = Gameturn::where( 'game_id', $request->input( 'game_id' ) )->latest()->firstOrFail();
 
@@ -42,16 +42,47 @@ class GameturnController extends Controller {
             return response()->json( [ 'error' => 'Parameters error: ' . $e->getMessage() ], 500 );
         }
 
+        if ( $last_gameturn->won() ) {
+            return response()->json( [
+                'status'    => 'error',
+                'error'    => 'Game already finished!',
+                'gameturn' => $last_gameturn,
+            ], 500 );
+        }
+
         if ( $request->input( 'player' ) == $last_gameturn->player ) {
-            return response()->json( [ 'error' => 'It is not your turn to play' ], 500 );
+            return response()->json( [
+                'status'    => 'error',
+                'error' => 'It is not your turn to play',
+                'game'  => $last_gameturn,
+            ], 500 );
         }
 
         $position_state = $last_gameturn->{$request->input( 'position' )};
         if ( $position_state !== 0 ) {
-            return response()->json( [ 'error' => 'The position is already taken by player ' . $position_state ], 500 );
+            return response()->json( [
+                'status'    => 'error',
+                'error' => 'The position is already taken by player ' . $position_state,
+                'game'  => $last_gameturn,
+            ], 500 );
         }
 
-        //todo check victory
+        $new_gameturn                                  = $last_gameturn->replicate();
+        $new_gameturn->{$request->input( 'position' )} = (int)$request->input( 'player' );
+        $new_gameturn->player                          = (int)$request->input( 'player' );
+        $new_gameturn->save();
+
+        if ( $new_gameturn->won() ) {
+            return response()->json( [
+                'status'   => 'You Won!',
+                'gameturn' => $new_gameturn,
+            ], 200 );
+        } else {
+            return response()->json( [
+                'status'   => 'You (player: ' . $request->input( 'player' ) . ') marked position ' . $request->input( 'position' ),
+                'gameturn' => $new_gameturn,
+            ], 200 );
+        }
     }
 
 
